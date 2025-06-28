@@ -18,6 +18,7 @@ defmodule ConfigUiWeb.Router do
     pipe_through :browser
 
     live "/", ConfigEditorLive
+    live "/view", ViewLive
   end
 
   # Other scopes may use custom stacks.
