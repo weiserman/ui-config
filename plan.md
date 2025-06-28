@@ -1,0 +1,33 @@
+# ConfigUI MVP - Dynamic UI Generator Plan
+
+- [x] Generate a Phoenix LiveView project called `config_ui`
+- [ ] Start the server to follow along  
+- [ ] Replace home.html.heex with a static mockup of our split-screen design
+- [ ] Create the main ConfigEditorLive LiveView with:
+  - JSON config editor textarea with real-time parsing
+  - Live preview panel that updates instantly as config changes
+  - Sample template dropdown with 3 pre-built examples (contact form, user profile, dashboard)
+  - File upload drag-and-drop functionality for JSON files
+  - Error handling for invalid JSON with helpful messages
+- [ ] Create the DynamicRenderer component for rendering JSON to UI
+  - Support all component types: text_input, email_input, select, textarea, button, header, paragraph, container, form
+  - Handle form submissions and show submitted data
+  - Handle button click events and show "Event fired: button_name" messages
+  - Basic required field validation for forms
+- [ ] Update root.html.heex layout for modern & clean design
+  - Force light theme with clean, modern styling
+  - Remove default Phoenix header/nav
+- [ ] Update <Layouts.app> for split-screen layout
+  - Clean header with app title
+  - Full-width container for editor/preview split
+- [ ] Update app.css with custom modern & clean styling
+  - Split-screen layout styles
+  - Clean editor and preview panel styling
+  - Modern form component styles
+- [ ] Update router - replace placeholder home route with our ConfigEditorLive
+- [ ] Visit the app to verify everything works
+  - Test JSON editing with live preview
+  - Test template dropdown
+  - Test file upload
+  - Test form submissions and button clicks
+
