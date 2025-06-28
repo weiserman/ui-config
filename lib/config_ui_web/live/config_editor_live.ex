@@ -164,6 +164,89 @@ defmodule ConfigUiWeb.ConfigEditorLive do
           "action" => "navigate_help"
         }
       ]
+    },
+    "columns" => %{
+      "type" => "columns",
+      "gap" => "lg",
+      "responsive" => true,
+      "columns" => [
+        %{
+          "width" => "1/3",
+          "component" => %{
+            "type" => "navigation",
+            "title" => "Sidebar Navigation",
+            "items" => [
+              %{
+                "label" => "Dashboard",
+                "icon" => "hero-home",
+                "action" => "navigate_dashboard"
+              },
+              %{
+                "label" => "Forms",
+                "icon" => "hero-document-text",
+                "action" => "navigate_forms"
+              },
+              %{
+                "label" => "Settings",
+                "icon" => "hero-cog-6-tooth",
+                "children" => [
+                  %{
+                    "label" => "Profile",
+                    "action" => "navigate_profile"
+                  },
+                  %{
+                    "label" => "Preferences",
+                    "action" => "navigate_preferences"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        %{
+          "width" => "2/3",
+          "component" => %{
+            "type" => "form",
+            "title" => "Main Content Area",
+            "components" => [
+              %{
+                "type" => "header",
+                "text" => "User Registration",
+                "level" => 2
+              },
+              %{
+                "type" => "text_input",
+                "label" => "Full Name",
+                "name" => "name",
+                "required" => true
+              },
+              %{
+                "type" => "email_input",
+                "label" => "Email Address",
+                "name" => "email",
+                "required" => true
+              },
+              %{
+                "type" => "select",
+                "label" => "Department",
+                "name" => "department",
+                "options" => ["Engineering", "Design", "Marketing", "Sales"]
+              },
+              %{
+                "type" => "textarea",
+                "label" => "Additional Notes",
+                "name" => "notes",
+                "rows" => 3
+              },
+              %{
+                "type" => "button",
+                "label" => "Create Account",
+                "action" => "submit"
+              }
+            ]
+          }
+        }
+      ]
     }
   }
 
@@ -259,7 +342,7 @@ defmodule ConfigUiWeb.ConfigEditorLive do
   end
 
   def handle_event("form_submit", _params, socket) do
-    {:noreply, assign(socket, :event_message, "Form submitted with(params)}")}
+    {:noreply, assign(socket, :event_message, "Form submitted successfully!")}
   end
 
   def handle_event("button_click", %{"action" => action}, socket) do
