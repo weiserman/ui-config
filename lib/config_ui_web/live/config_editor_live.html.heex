@@ -1,0 +1,186 @@
+<Layouts.app flash={@flash}>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+              />
+            </svg>
+          </div>
+          <h1 class="text-xl font-semibold text-gray-900">ConfigUI</h1>
+        </div>
+        <div class="text-sm text-gray-500">Dynamic UI Generator</div>
+      </div>
+    </header>
+    
+<!-- Event Message Display -->
+    <%= if @event_message do %>
+      <div class="bg-green-50 border border-green-200 rounded-md p-4 mx-6 mt-4">
+        <div class="flex justify-between items-center">
+          <p class="text-sm text-green-800">{@event_message}</p>
+          <button phx-click="clear_message" class="text-green-600 hover:text-green-800">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    <% end %>
+    
+<!-- Main Content - Split Screen -->
+    <div class="flex h-[calc(100vh-73px)]">
+      <!-- Left Panel - Config Editor -->
+      <div class="w-1/2 bg-white border-r border-gray-200 flex flex-col">
+        <div class="px-6 py-4 border-b border-gray-200">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-medium text-gray-900">Configuration Editor</h2>
+            <select
+              phx-change="select_template"
+              name="template"
+              class="text-sm border border-gray-300 rounded-md px-3 py-1 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="contact_form" selected={@selected_template == "contact_form"}>
+                Contact Form
+              </option>
+              <option value="user_profile" selected={@selected_template == "user_profile"}>
+                User Profile
+              </option>
+              <option value="dashboard" selected={@selected_template == "dashboard"}>
+                Dashboard Layout
+              </option>
+            </select>
+          </div>
+          
+<!-- File Upload Area -->
+          <form phx-submit="upload_config" phx-change="validate_upload">
+            <div
+              class="mb-4 p-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50"
+              phx-drop-target={@uploads.config_file.ref}
+            >
+              <.live_file_input upload={@uploads.config_file} class="hidden" />
+              <svg
+                class="mx-auto h-8 w-8 text-gray-400 mb-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M7 16a4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
+              </svg>
+              <p class="text-sm text-gray-600">
+                Drop JSON file here or
+                <button
+                  type="button"
+                  onclick="document.querySelector('input[type=file]').click()"
+                  class="text-blue-600 hover:text-blue-800 underline"
+                >
+                  click to upload
+                </button>
+              </p>
+
+              <%= for entry <- @uploads.config_file.entries do %>
+                <div class="mt-2 flex items-center justify-between text-sm">
+                  <span class="text-gray-700">{entry.client_name}</span>
+                  <button
+                    type="button"
+                    phx-click="cancel_upload"
+                    phx-value-ref={entry.ref}
+                    class="text-red-600 hover:text-red-800"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              <% end %>
+
+              <%= if @uploads.config_file.entries != [] do %>
+                <button
+                  type="submit"
+                  class="mt-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                >
+                  Upload & Parse
+                </button>
+              <% end %>
+            </div>
+          </form>
+
+          <%= if @upload_error do %>
+            <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <p class="text-sm text-red-800">{@upload_error}</p>
+            </div>
+          <% end %>
+        </div>
+        
+<!-- JSON Editor -->
+        <div class="flex-1 p-6">
+          <form phx-change="validate_config">
+            <textarea
+              name="config"
+              phx-debounce="300"
+              class="w-full h-full font-mono text-sm border border-gray-300 rounded-lg p-4 bg-gray-50 text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter your JSON configuration here..."
+            ><%= @config_json %></textarea>
+          </form>
+
+          <%= if @json_error do %>
+            <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <p class="text-sm text-red-800">{@json_error}</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      
+<!-- Right Panel - Live Preview -->
+      <div class="w-1/2 bg-gray-50 flex flex-col">
+        <div class="px-6 py-4 border-b border-gray-200 bg-white">
+          <h2 class="text-lg font-medium text-gray-900">Live Preview</h2>
+          <p class="text-sm text-gray-500 mt-1">Real-time UI generation</p>
+        </div>
+        
+<!-- Preview Content -->
+        <div class="flex-1 p-6 overflow-auto">
+          <%= if @parsed_config do %>
+            <ConfigUiWeb.DynamicRenderer.render config={@parsed_config} />
+          <% else %>
+            <div class="flex items-center justify-center h-full">
+              <div class="text-center">
+                <svg
+                  class="mx-auto h-12 w-12 text-gray-400 mb-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No Valid Configuration</h3>
+                <p class="text-gray-500">
+                  Enter valid JSON configuration to see the live preview
+                </p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layouts.app>
