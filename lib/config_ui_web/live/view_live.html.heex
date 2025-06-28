@@ -1,0 +1,88 @@
+<Layouts.app flash={@flash}>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Minimal Header -->
+    <header class="bg-white border-b border-gray-200 px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+          </div>
+          <h1 class="text-lg font-semibold text-gray-900">ConfigUI View</h1>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <span class="text-sm text-gray-500">Template:</span>
+          <form>
+            <select
+              phx-change="select_template"
+              name="template"
+              class="text-sm border border-gray-300 rounded-md px-3 py-1 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="contact_form" selected={@selected_template == "contact_form"}>
+                Contact Form
+              </option>
+              <option value="user_profile" selected={@selected_template == "user_profile"}>
+                User Profile
+              </option>
+              <option value="dashboard" selected={@selected_template == "dashboard"}>
+                Dashboard
+              </option>
+              <option value="navigation" selected={@selected_template == "navigation"}>
+                Navigation
+              </option>
+              <option value="columns" selected={@selected_template == "columns"}>
+                Columns Layout
+              </option>
+            </select>
+          </form>
+
+          <a
+            href="/"
+            class="text-sm bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Back to Editor
+          </a>
+        </div>
+      </div>
+    </header>
+    
+<!-- Event Message Display -->
+    <%= if @event_message do %>
+      <div class="bg-green-50 border border-green-200 rounded-md p-3 mx-4 mt-3">
+        <div class="flex justify-between items-center">
+          <p class="text-sm text-green-800">{@event_message}</p>
+          <button phx-click="clear_message" class="text-green-600 hover:text-green-800">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    <% end %>
+    
+<!-- Full-Screen UI Display -->
+    <div class="p-6">
+      <div class="mx-auto">
+        <ConfigUiWeb.DynamicRenderer.render config={@config} />
+      </div>
+    </div>
+  </div>
+</Layouts.app>
