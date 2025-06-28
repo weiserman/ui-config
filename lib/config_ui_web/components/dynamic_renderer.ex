@@ -1,6 +1,5 @@
 defmodule ConfigUiWeb.DynamicRenderer do
   use Phoenix.Component
-  alias Phoenix.LiveView.JS
   import ConfigUiWeb.CoreComponents, only: [icon: 1]
 
   def render(assigns) do
@@ -21,7 +20,7 @@ defmodule ConfigUiWeb.DynamicRenderer do
       get_gap_classes(@config["gap"]),
       get_responsive_classes(@config["responsive"])
     ]}>
-      <%= for {column, index} <- Enum.with_index(@config["columns"] || []) do %>
+      <%= for column <- @config["columns"] || [] do %>
         <div class={[
           "flex flex-col",
           get_column_width_classes(column["width"])
@@ -104,7 +103,7 @@ defmodule ConfigUiWeb.DynamicRenderer do
         <div
           class="flex items-center flex-1"
           phx-click="nav_item_click"
-          phx-value-action={@item["action"]}
+          phx-value-action={@item["action"] || ""}
           phx-value-label={@item["label"]}
         >
           <%= if @item["icon"] do %>
@@ -318,11 +317,4 @@ defmodule ConfigUiWeb.DynamicRenderer do
   defp get_indent_classes(2), do: "pl-12"
   defp get_indent_classes(3), do: "pl-16"
   defp get_indent_classes(level) when level > 3, do: "pl-20"
-
-  defp generate_id(item) do
-    item["label"]
-    |> String.downcase()
-    |> String.replace(~r/[^a-z0-9]+/, "-")
-    |> String.trim("-")
-  end
 end
