@@ -45,6 +45,71 @@ defmodule ConfigUiWeb.DynamicRenderer do
     """
   end
 
+  defp render_component(%{config: %{"type" => "navigation"} = config} = assigns) do
+    assigns = assign(assigns, :config, config)
+
+    ~H"""
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <%= if @config["title"] do %>
+        <div class="px-4 py-3 border-b border-gray-200 bg-gray-50">
+          <h3 class="text-sm font-semibold text-gray-900">{@config["title"]}</h3>
+        </div>
+      <% end %>
+
+      <nav class="py-2">
+        <%= for item <- @config["items"] || [] do %>
+          <.render_nav_item item={item} level={0} />
+        <% end %>
+      </nav>
+    </div>
+    """
+  end
+
+  defp render_nav_item(assigns) do
+    assigns = assign(assigns, :has_children, has_children?(assigns.item))
+
+    ~H"""
+    <div class="nav-item-container">
+      <!-- Main nav item -->
+      <div class={[
+        "flex items-center justify-between px-4 py-2 text-sm hover:bg-gray-50 cursor-pointer transition-colors",
+        get_indent_classes(@level)
+      ]}>
+        <div
+          class="flex items-center flex-1"
+          phx-click="nav_item_click"
+          phx-value-action={@item["action"]}
+          phx-value-label={@item["label"]}
+        >
+          <%= if @item["icon"] do %>
+            <.icon name={@item["icon"]} class="w-4 h-4 mr-3 text-gray-500" />
+          <% end %>
+          <span class="text-gray-900">{@item["label"]}</span>
+        </div>
+
+        <%= if @has_children do %>
+          <button
+            type="button"
+            class="p-1 hover:bg-gray-100 rounded"
+            phx-click={JS.toggle(to: "#nav-children-#{generate_id(@item)}")}
+          >
+            <.icon name="hero-chevron-down" class="w-3 h-3 text-gray-400 transition-transform" />
+          </button>
+        <% end %>
+      </div>
+      
+    <!-- Children (collapsible) -->
+      <%= if @has_children do %>
+        <div id={"nav-children-#{generate_id(@item)}"} class="block">
+          <%= for child <- @item["children"] do %>
+            <.render_nav_item item={child} level={@level + 1} />
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    """
+  end
+
   defp render_component(%{config: %{"type" => "text_input"} = config} = assigns) do
     assigns = assign(assigns, :config, config)
 
@@ -190,5 +255,26 @@ defmodule ConfigUiWeb.DynamicRenderer do
       </p>
     </div>
     """
+  end
+
+  # Helper functions
+  defp has_children?(item) do
+    case item["children"] do
+      children when is_list(children) and length(children) > 0 -> true
+      _ -> false
+    end
+  end
+
+  defp get_indent_classes(0), do: ""
+  defp get_indent_classes(1), do: "pl-8"
+  defp get_indent_classes(2), do: "pl-12"
+  defp get_indent_classes(3), do: "pl-16"
+  defp get_indent_classes(level) when level > 3, do: "pl-20"
+
+  defp generate_id(item) do
+    item["label"]
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9]+/, "-")
+    |> String.trim("-")
   end
 end
