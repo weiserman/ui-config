@@ -17,7 +17,7 @@ defmodule ConfigUiWeb.Router do
   scope "/", ConfigUiWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", ConfigEditorLive
   end
 
   # Other scopes may use custom stacks.
