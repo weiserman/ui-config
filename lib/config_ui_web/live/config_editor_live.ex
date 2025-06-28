@@ -258,7 +258,7 @@ defmodule ConfigUiWeb.ConfigEditorLive do
     end
   end
 
-  def handle_event("form_submit", params, socket) do
+  def handle_event("form_submit", _params, socket) do
     {:noreply, assign(socket, :event_message, "Form submitted with(params)}")}
   end
 
