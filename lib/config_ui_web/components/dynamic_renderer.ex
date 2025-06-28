@@ -5,7 +5,7 @@ defmodule ConfigUiWeb.DynamicRenderer do
 
   def render(assigns) do
     ~H"""
-    <div class="max-w-md mx-auto">
+    <div class={if @config["type"] == "columns", do: "w-full", else: "max-w-md mx-auto"}>
       <.render_component config={@config} />
     </div>
     """
@@ -16,7 +16,7 @@ defmodule ConfigUiWeb.DynamicRenderer do
 
     ~H"""
     <div class={[
-      "grid gap-4",
+      "grid",
       get_column_classes(@config["columns"]),
       get_gap_classes(@config["gap"]),
       get_responsive_classes(@config["responsive"])
