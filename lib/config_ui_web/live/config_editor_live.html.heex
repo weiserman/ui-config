@@ -1,11 +1,11 @@
 <Layouts.app flash={@flash}>
   <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 px-6 py-2">
+    <!-- Compact Header -->
+    <header class="bg-white border-b border-gray-200 px-4 py-1">
       <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <div class="w-6 h-6 bg-blue-600 rounded-lg flex items-center justify-center">
-            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="flex items-center space-x-2">
+          <div class="w-5 h-5 bg-blue-600 rounded flex items-center justify-center">
+            <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -14,19 +14,38 @@
               />
             </svg>
           </div>
-          <h1 class="text-lg font-semibold text-gray-900">ConfigUI</h1>
+          <h1 class="text-sm font-semibold text-gray-900">ConfigUI</h1>
         </div>
-        <div class="text-xs text-gray-500">Dynamic UI Generator</div>
+        <div class="flex items-center space-x-3">
+          <span class="text-xs text-gray-500">Template:</span>
+          <form>
+            <select
+              phx-change="select_template"
+              name="template"
+              class="text-xs border border-gray-300 rounded px-2 py-1 bg-white text-gray-700"
+            >
+              <option value="contact_form" selected={@selected_template == "contact_form"}>
+                Contact Form
+              </option>
+              <option value="user_profile" selected={@selected_template == "user_profile"}>
+                User Profile
+              </option>
+              <option value="dashboard" selected={@selected_template == "dashboard"}>
+                Dashboard
+              </option>
+            </select>
+          </form>
+        </div>
       </div>
     </header>
     
 <!-- Event Message Display -->
     <%= if @event_message do %>
-      <div class="bg-green-50 border border-green-200 rounded-md p-3 mx-6 mt-2">
+      <div class="bg-green-50 border border-green-200 rounded-md p-2 mx-4 mt-1">
         <div class="flex justify-between items-center">
-          <p class="text-sm text-green-800">{@event_message}</p>
+          <p class="text-xs text-green-800">{@event_message}</p>
           <button phx-click="clear_message" class="text-green-600 hover:text-green-800">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -39,48 +58,24 @@
       </div>
     <% end %>
     
-<!-- Main Content - Split Screen -->
-    <div class="flex h-[calc(100vh-65px)]">
-      <!-- Left Panel - Config Editor -->
+<!-- Main Content - Split Screen with maximum height -->
+    <div class="flex h-[calc(100vh-40px)]">
+      <!-- Left Panel - Config Editor takes up maximum space -->
       <div class="w-1/2 bg-white border-r border-gray-200 flex flex-col">
-        <!-- Minimal Header with Template Dropdown -->
-        <div class="px-4 py-2 border-b border-gray-200 bg-gray-50">
-          <div class="flex items-center justify-between">
-            <span class="text-sm font-medium text-gray-700">Configuration Editor</span>
-            <form>
-              <select
-                phx-change="select_template"
-                name="template"
-                class="text-xs border border-gray-300 rounded px-2 py-1 bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="contact_form" selected={@selected_template == "contact_form"}>
-                  Contact Form
-                </option>
-                <option value="user_profile" selected={@selected_template == "user_profile"}>
-                  User Profile
-                </option>
-                <option value="dashboard" selected={@selected_template == "dashboard"}>
-                  Dashboard Layout
-                </option>
-              </select>
-            </form>
-          </div>
-        </div>
-        
-<!-- JSON Editor - Takes up almost all vertical space -->
-        <div class="flex-1 p-2">
-          <form phx-change="validate_config" id="config-form">
+        <!-- JSON Editor with minimal wrapper -->
+        <div class="flex-1 p-1">
+          <form phx-change="validate_config" id="config-form" class="h-full">
             <textarea
               id="config-editor"
               name="config"
               phx-debounce="300"
-              class="w-full h-full font-mono text-xs border border-gray-300 rounded p-2 bg-gray-50 text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              class="w-full h-full font-mono text-sm border border-gray-300 rounded p-3 bg-gray-50 text-gray-800 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Enter your JSON configuration here..."
             ><%= @config_json %></textarea>
           </form>
 
           <%= if @json_error do %>
-            <div class="mt-2 p-2 bg-red-50 border border-red-200 rounded">
+            <div class="mt-1 p-2 bg-red-50 border border-red-200 rounded">
               <p class="text-xs text-red-800">{@json_error}</p>
             </div>
           <% end %>
@@ -89,13 +84,12 @@
       
 <!-- Right Panel - Live Preview -->
       <div class="w-1/2 bg-gray-50 flex flex-col">
-        <div class="px-4 py-2 border-b border-gray-200 bg-white">
+        <div class="px-3 py-1 border-b border-gray-200 bg-white">
           <h2 class="text-sm font-medium text-gray-900">Live Preview</h2>
-          <p class="text-xs text-gray-500">Real-time UI generation</p>
         </div>
         
 <!-- Preview Content -->
-        <div class="flex-1 p-4 overflow-auto">
+        <div class="flex-1 p-3 overflow-auto">
           <%= if @parsed_config do %>
             <ConfigUiWeb.DynamicRenderer.render config={@parsed_config} />
           <% else %>
