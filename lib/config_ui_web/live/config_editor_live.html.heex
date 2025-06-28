@@ -23,14 +23,6 @@
               phx-change="select_template"
               name="template"
               class="text-xs border border-gray-300 rounded px-2 py-1 bg-white text-gray-700"
-          </form>
-
-          <a
-            href="/view"
-            class="text-xs bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Live View
-          </a>
             >
               <option value="contact_form" selected={@selected_template == "contact_form"}>
                 Contact Form
@@ -49,6 +41,13 @@
               </option>
             </select>
           </form>
+
+          <a
+            href="/view"
+            class="text-xs bg-blue-600 text-white px-3 py-1 rounded-md hover:bg-blue-700 transition-colors"
+          >
+            Live View
+          </a>
         </div>
       </div>
     </header>
