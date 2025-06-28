@@ -1,5 +1,6 @@
 defmodule ConfigUiWeb.DynamicRenderer do
   use Phoenix.Component
+  import ConfigUiWeb.CoreComponents, only: [icon: 1]
 
   def render(assigns) do
     ~H"""
