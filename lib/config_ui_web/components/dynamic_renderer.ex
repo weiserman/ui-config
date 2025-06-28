@@ -1,5 +1,6 @@
 defmodule ConfigUiWeb.DynamicRenderer do
   use Phoenix.Component
+  alias Phoenix.LiveView.JS
   import ConfigUiWeb.CoreComponents, only: [icon: 1]
 
   def render(assigns) do
@@ -89,19 +90,15 @@ defmodule ConfigUiWeb.DynamicRenderer do
         </div>
 
         <%= if @has_children do %>
-          <button
-            type="button"
-            class="p-1 hover:bg-gray-100 rounded"
-            phx-click={JS.toggle(to: "#nav-children-#{generate_id(@item)}")}
-          >
+          <button type="button" class="p-1 hover:bg-gray-100 rounded">
             <.icon name="hero-chevron-down" class="w-3 h-3 text-gray-400 transition-transform" />
           </button>
         <% end %>
       </div>
       
-    <!-- Children (collapsible) -->
+    <!-- Children -->
       <%= if @has_children do %>
-        <div id={"nav-children-#{generate_id(@item)}"} class="block">
+        <div class="block">
           <%= for child <- @item["children"] do %>
             <.render_nav_item item={child} level={@level + 1} />
           <% end %>
