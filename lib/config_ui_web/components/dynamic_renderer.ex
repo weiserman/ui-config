@@ -154,7 +154,7 @@ defmodule ConfigUiWeb.DynamicRenderer do
 
   defp render_component(%{config: %{"type" => "header"} = config} = assigns) do
     assigns = assign(assigns, :config, config)
-    level = @config["level"] || 1
+    level = config["level"] || 1
 
     ~H"""
     <%= case level do %>
