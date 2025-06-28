@@ -350,6 +350,7 @@ defmodule ConfigUiWeb.ConfigEditorLive do
   end
 
   def handle_event("nav_item_click", %{"action" => action, "label" => label}, socket) do
+    action = if action == "", do: "no_action", else: action
     {:noreply, assign(socket, :event_message, "Navigation clicked: #{label} (#{action})")}
   end
 
