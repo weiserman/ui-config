@@ -11,6 +11,30 @@ defmodule ConfigUiWeb.DynamicRenderer do
     """
   end
 
+  defp render_component(%{config: %{"type" => "columns"} = config} = assigns) do
+    assigns = assign(assigns, :config, config)
+
+    ~H"""
+    <div class={[
+      "grid gap-4",
+      get_column_classes(@config["columns"]),
+      get_gap_classes(@config["gap"]),
+      get_responsive_classes(@config["responsive"])
+    ]}>
+      <%= for {column, index} <- Enum.with_index(@config["columns"] || []) do %>
+        <div class={[
+          "flex flex-col",
+          get_column_width_classes(column["width"])
+        ]}>
+          <%= if column["component"] do %>
+            <.render_component config={column["component"]} />
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    """
+  end
+
   defp render_component(%{config: %{"type" => "form"} = config} = assigns) do
     assigns = assign(assigns, :config, config)
 
@@ -254,6 +278,36 @@ defmodule ConfigUiWeb.DynamicRenderer do
     </div>
     """
   end
+
+  # Column layout helper functions
+  defp get_column_classes(columns) when is_list(columns) do
+    case length(columns) do
+      2 -> "grid-cols-1 md:grid-cols-2"
+      3 -> "grid-cols-1 md:grid-cols-3"
+      4 -> "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+      _ -> "grid-cols-1"
+    end
+  end
+
+  defp get_column_classes(_), do: "grid-cols-1"
+
+  defp get_gap_classes("xs"), do: "gap-1"
+  defp get_gap_classes("sm"), do: "gap-2"
+  defp get_gap_classes("md"), do: "gap-4"
+  defp get_gap_classes("lg"), do: "gap-6"
+  defp get_gap_classes("xl"), do: "gap-8"
+  defp get_gap_classes(_), do: "gap-4"
+
+  defp get_responsive_classes(true), do: "w-full"
+  defp get_responsive_classes(_), do: ""
+
+  defp get_column_width_classes("1/4"), do: "md:col-span-1"
+  defp get_column_width_classes("1/3"), do: "md:col-span-1"
+  defp get_column_width_classes("1/2"), do: "md:col-span-1"
+  defp get_column_width_classes("2/3"), do: "md:col-span-2"
+  defp get_column_width_classes("3/4"), do: "md:col-span-3"
+  defp get_column_width_classes("full"), do: "md:col-span-full"
+  defp get_column_width_classes(_), do: ""
 
   # Helper functions
   defp has_children?(item) do
