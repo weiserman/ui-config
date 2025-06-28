@@ -281,12 +281,8 @@ defmodule ConfigUiWeb.DynamicRenderer do
 
   # Column layout helper functions
   defp get_column_classes(columns) when is_list(columns) do
-    case length(columns) do
-      2 -> "grid-cols-1 md:grid-cols-2"
-      3 -> "grid-cols-1 md:grid-cols-3"
-      4 -> "grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
-      _ -> "grid-cols-1"
-    end
+    # Always use grid-cols-12 for flexible column widths
+    "grid-cols-12"
   end
 
   defp get_column_classes(_), do: "grid-cols-1"
@@ -301,12 +297,12 @@ defmodule ConfigUiWeb.DynamicRenderer do
   defp get_responsive_classes(true), do: "w-full"
   defp get_responsive_classes(_), do: ""
 
-  defp get_column_width_classes("1/4"), do: "md:col-span-1"
-  defp get_column_width_classes("1/3"), do: "md:col-span-1"
-  defp get_column_width_classes("1/2"), do: "md:col-span-1"
-  defp get_column_width_classes("2/3"), do: "md:col-span-2"
-  defp get_column_width_classes("3/4"), do: "md:col-span-3"
-  defp get_column_width_classes("full"), do: "md:col-span-full"
+  defp get_column_width_classes("1/4"), do: "col-span-3"
+  defp get_column_width_classes("1/3"), do: "col-span-4"
+  defp get_column_width_classes("1/2"), do: "col-span-6"
+  defp get_column_width_classes("2/3"), do: "col-span-8"
+  defp get_column_width_classes("3/4"), do: "col-span-9"
+  defp get_column_width_classes("full"), do: "col-span-12"
   defp get_column_width_classes(_), do: ""
 
   # Helper functions
