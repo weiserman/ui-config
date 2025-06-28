@@ -101,6 +101,69 @@ defmodule ConfigUiWeb.ConfigEditorLive do
           ]
         }
       ]
+    },
+    "navigation" => %{
+      "type" => "navigation",
+      "title" => "Main Navigation",
+      "items" => [
+        %{
+          "label" => "Dashboard",
+          "icon" => "hero-home",
+          "action" => "navigate_dashboard"
+        },
+        %{
+          "label" => "Projects",
+          "icon" => "hero-folder",
+          "children" => [
+            %{
+              "label" => "Web Development",
+              "action" => "navigate_web_projects",
+              "children" => [
+                %{
+                  "label" => "React Apps",
+                  "action" => "navigate_react"
+                },
+                %{
+                  "label" => "Vue.js Apps",
+                  "action" => "navigate_vue"
+                }
+              ]
+            },
+            %{
+              "label" => "Mobile Apps",
+              "action" => "navigate_mobile_projects"
+            },
+            %{
+              "label" => "Desktop Apps",
+              "action" => "navigate_desktop_projects"
+            }
+          ]
+        },
+        %{
+          "label" => "Team",
+          "icon" => "hero-users",
+          "children" => [
+            %{
+              "label" => "Members",
+              "action" => "navigate_team_members"
+            },
+            %{
+              "label" => "Roles & Permissions",
+              "action" => "navigate_team_roles"
+            }
+          ]
+        },
+        %{
+          "label" => "Settings",
+          "icon" => "hero-cog-6-tooth",
+          "action" => "navigate_settings"
+        },
+        %{
+          "label" => "Help & Support",
+          "icon" => "hero-question-mark-circle",
+          "action" => "navigate_help"
+        }
+      ]
     }
   }
 
@@ -196,11 +259,15 @@ defmodule ConfigUiWeb.ConfigEditorLive do
   end
 
   def handle_event("form_submit", params, socket) do
-    {:noreply, assign(socket, :event_message, "Form submitted with data: #{inspect(params)}")}
+    {:noreply, assign(socket, :event_message, "Form submitted with(params)}")}
   end
 
   def handle_event("button_click", %{"action" => action}, socket) do
     {:noreply, assign(socket, :event_message, "Event fired: #{action}")}
+  end
+
+  def handle_event("nav_item_click", %{"action" => action, "label" => label}, socket) do
+    {:noreply, assign(socket, :event_message, "Navigation clicked: #{label} (#{action})")}
   end
 
   def handle_event("clear_message", _params, socket) do
